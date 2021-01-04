@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
@@ -10,76 +10,55 @@ import css from "./style.module.css";
 import * as actions from "../../redux/actions/signupActions";
 import Spinner from "../../components/General/Spinner";
 
-class SignupPage extends Component {
-  state = {
-    email: "",
-    password: "",
-    passwordConfirm: "",
-    // Password not match
-    error: "",
+const SignupPage = (props) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [error, setError] = useState("");
+
+  const changeEmail = (e) => {
+    setEmail(e.target.value);
   };
 
-  signup = () => {
-    if (this.state.password !== this.state.passwordConfirm) {
-      this.setState({ error: "Нууц үгээ зөв давтана уу!" });
+  const changePassword = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const changePasswordConfirm = (e) => {
+    setPasswordConfirm(e.target.value);
+  };
+
+  const signup = () => {
+    if (password !== passwordConfirm) {
+      setError("Нууц үгээ зөв давтана уу!");
       // return;
     } else {
-      this.setState({ error: "" });
-      this.props.signupUser(this.state.email, this.state.password);
+      setError("");
+      props.signupUser(email, password);
     }
   };
 
-  changeEmail = (e) => {
-    this.setState({ email: e.target.value });
-  };
-
-  changePassword = (e) => {
-    this.setState({ password: e.target.value });
-  };
-
-  changePasswordConfirm = (e) => {
-    this.setState({ passwordConfirm: e.target.value });
-  };
-
-  componentDidUpdate() {
-    // this.props.userId && this.props.history.push("/orders");
-  }
-
-  render() {
-    return (
-      <div className={css.Signup}>
-        {this.props.userId && <Redirect to="/orders" />}
-        <h3>Мэдээллээ оруулна уу</h3>
-        <input
-          onChange={this.changeEmail}
-          type="text"
-          placeholder="Имэйл хаяг"
-        />
-        <input
-          onChange={this.changePassword}
-          type="password"
-          placeholder="Нууц үг"
-        />
-        <input
-          onChange={this.changePasswordConfirm}
-          type="password"
-          placeholder="Нууц үгээ давтана уу"
-        />
-        {this.state.error && (
-          <div style={{ color: "red" }}>{this.state.error}</div>
-        )}
-        {this.props.error && (
-          <div style={{ color: "red" }}>{this.props.error}</div>
-        )}
-        {this.props.saving ? (
-          <Spinner />
-        ) : (
-          <Button text="Бүртгүүлэх" btnType="Success" clicked={this.signup} />
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div className={css.Signup}>
+      {props.userId && <Redirect to="/orders" />}
+      <h3>Мэдээллээ оруулна уу</h3>
+      <input onChange={changeEmail} type="text" placeholder="Имэйл хаяг" />
+      <input onChange={changePassword} type="password" placeholder="Нууц үг" />
+      <input
+        onChange={changePasswordConfirm}
+        type="password"
+        placeholder="Нууц үгээ давтана уу"
+      />
+      {error && <div style={{ color: "red" }}>{error}</div>}
+      {props.error && <div style={{ color: "red" }}>{props.error}</div>}
+      {props.saving ? (
+        <Spinner />
+      ) : (
+        <Button text="Бүртгүүлэх" btnType="Success" clicked={signup} />
+      )}
+    </div>
+  );
+};
 
 const mapStateToProps = (state) => {
   return {

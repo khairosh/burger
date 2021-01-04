@@ -1,3 +1,5 @@
+import { act } from "react-dom/test-utils";
+
 const INGREDIENT_PRICES = {
   cheese: 250,
   bacon: 800,
@@ -53,6 +55,8 @@ const reducer = (state = initialState, action) => {
           purchasing: newPrice > 500,
         }
       : { ...state };
+  } else if (action.type == "CLEAR_ORDER") {
+    return initialState;
   }
 
   return state;

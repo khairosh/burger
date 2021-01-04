@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 
 import { connect } from "react-redux";
 
@@ -11,38 +11,54 @@ import css from "./style.module.css";
 
 import * as actions from "../../redux/actions/orderActions";
 
-class Contact extends Component {
-  state = {
-    custName: null,
-    city: null,
-    stree: null,
+const Contact = (props) => {
+  const [custName, setCustName] = useState(null);
+  const [city, setCity] = useState(null);
+  const [street, setStreet] = useState(null);
+
+  // useEffect(() => {
+  //   return () => {
+  //     props.clearOrder();
+  //   };
+  // }, []);
+
+  useEffect(() => {
+    props.newOrderStatus.finished && props.history.replace("/orders");
+
+    return () => {
+      props.newOrderStatus.finished && props.clearOrder();
+    };
+  }, [props.newOrderStatus.finished]);
+
+  // const componentDidUpdate = () =>
+  //   props.newOrderStatus.finished && props.history.replace("/orders");
+  // }
+
+  const changedName = (e) => {
+    setCustName(e.target.value);
   };
 
-  changedName = (e) => {
-    this.setState({ custName: e.target.value });
+  const changedCity = (e) => {
+    setCity(e.target.value);
   };
 
-  changedCity = (e) => {
-    this.setState({ city: e.target.value });
+  const changedStreet = (e) => {
+    setStreet(e.target.value);
   };
 
-  changedStreet = (e) => {
-    this.setState({ street: e.target.value });
-  };
-
-  saveOrder = () => {
+  const saveOrder = () => {
     const order = {
-      ingredients: this.props.ingredients,
-      totalPrice: this.props.totalPrice,
+      ingredients: props.ingredients,
+      totalPrice: props.totalPrice,
       address: {
-        custName: this.state.custName,
-        city: this.state.city,
-        street: this.state.street,
+        custName,
+        city,
+        street,
       },
-      userId: this.props.userId,
+      userId: props.userId,
     };
 
-    this.props.saveOrderAction(order);
+    props.saveOrderAction(order);
 
     // this.setState({ loading: true });
     // axios
@@ -56,45 +72,41 @@ class Contact extends Component {
     //   });
   };
 
-  componentDidUpdate() {
-    this.props.newOrderStatus.finished && this.props.history.replace("/orders");
-  }
-
-  render() {
-    return this.props.newOrderStatus.saving ? (
-      <Spinner />
-    ) : (
+  return (
+    <div>
       <div>
-        <div>
-          {this.props.newOrderStatus.error &&
-            "Захиалгыг хадгалах явцад алдаа гарлаа: " +
-              this.props.newOrderStatus.error}
-        </div>
-        <div className={css.Contact}>
-          <input
-            onChange={this.changedName}
-            type="text"
-            name="custName"
-            placeholder="Таны нэр"
-          />
-          <input
-            onChange={this.changedCity}
-            type="text"
-            name="city"
-            placeholder="Хот"
-          />
-          <input
-            onChange={this.changedStreet}
-            type="text"
-            name="street"
-            placeholder="Гэрийн хаяг"
-          />
-          <Button text="ИЛГЭЭХ" btnType="Success" clicked={this.saveOrder} />
-        </div>
+        {props.newOrderStatus.error &&
+          "Захиалгыг хадгалах явцад алдаа гарлаа: " +
+            props.newOrderStatus.error}
       </div>
-    );
-  }
-}
+      <div className={css.Contact}>
+        <input
+          onChange={changedName}
+          type="text"
+          name="custName"
+          placeholder="Таны нэр"
+        />
+        <input
+          onChange={changedCity}
+          type="text"
+          name="city"
+          placeholder="Хот"
+        />
+        <input
+          onChange={changedStreet}
+          type="text"
+          name="street"
+          placeholder="Гэрийн хаяг"
+        />
+        {props.newOrderStatus.saving ? (
+          <Spinner />
+        ) : (
+          <Button text="ИЛГЭЭХ" btnType="Success" clicked={saveOrder} />
+        )}
+      </div>
+    </div>
+  );
+};
 
 const mapStateToProps = (state) => {
   return {
@@ -108,6 +120,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     saveOrderAction: (newOrder) => dispatch(actions.saveOrder(newOrder)),
+    clearOrder: () => dispatch(actions.clearOrder()),
   };
 };
 

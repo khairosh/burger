@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import * as actions from "../../redux/actions/loginActions";
@@ -7,55 +7,46 @@ import Spinner from "../../components/General/Spinner";
 
 import css from "./style.module.css";
 
-class LoginPage extends Component {
-  state = {
-    email: "",
-    password: "",
+const LoginPage = (props) => {
+  const [form, setForm] = useState({ email: "", password: "" });
+
+  const login = () => {
+    props.login(form.email, form.password);
   };
 
-  login = () => {
-    this.props.login(this.state.email, this.state.password);
+  const changeEmail = (e) => {
+    const newEmail = e.target.value;
+    setForm((prevForm) => ({
+      password: prevForm.password,
+      email: newEmail,
+    }));
   };
 
-  changeEmail = (e) => {
-    this.setState({ email: e.target.value });
+  const changePassword = (e) => {
+    const newPassword = e.target.value;
+    setForm((prevForm) => {
+      return {
+        email: prevForm.email,
+        password: newPassword,
+      };
+    });
   };
 
-  changePassword = (e) => {
-    this.setState({ password: e.target.value });
-  };
+  return (
+    <div className={css.Login}>
+      {props.userId && <Redirect to="/orders" />}
 
-  componentDidUpdate() {
-    this.props.userId && this.props.history.push("/orders");
-  }
-
-  render() {
-    return (
-      <div className={css.Login}>
-        {this.props.userId && <Redirect to="/orders" />}
-
-        <input
-          onChange={this.changeEmail}
-          type="text"
-          placeholder="Имэйл хаяг"
-        />
-        <input
-          onChange={this.changePassword}
-          type="password"
-          placeholder="Нууц үг"
-        />
-        {this.props.error && (
-          <div style={{ color: "red" }}>{this.props.error}</div>
-        )}
-        {this.props.logginIn ? (
-          <Spinner />
-        ) : (
-          <Button text="Нэвтрэх" btnType="Success" clicked={this.login} />
-        )}
-      </div>
-    );
-  }
-}
+      <input onChange={changeEmail} type="text" placeholder="Имэйл хаяг" />
+      <input onChange={changePassword} type="password" placeholder="Нууц үг" />
+      {props.error && <div style={{ color: "red" }}>{props.error}</div>}
+      {props.logginIn ? (
+        <Spinner />
+      ) : (
+        <Button text="Нэвтрэх" btnType="Success" clicked={login} />
+      )}
+    </div>
+  );
+};
 
 const mapStateToProps = (state) => {
   return {

@@ -11,7 +11,7 @@ export const loadOrders = (userId) => {
     axios
       .get(`orders.json?auth=${token}&orderBy="userId"&equalTo="${userId}"`)
       .then((response) => {
-        const orders = Object.entries(response.data).reverse();
+        const orders = Object.entries(response.data);
         dispatch(loadOrdersSuccess(orders));
       })
       .catch((err) => {
@@ -77,8 +77,8 @@ export const saveOrderError = (error) => {
   };
 };
 
-export const resetOrder = () => {
+export const clearOrder = () => {
   return {
-    type: "RESET_ORDER",
+    type: "CLEAR_ORDER",
   };
 };

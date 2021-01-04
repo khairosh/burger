@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 
 import { connect } from "react-redux";
 
@@ -10,38 +10,21 @@ import * as actions from "../../redux/actions/orderActions";
 
 import css from "./stye.module.css";
 
-class OrderPage extends Component {
-  componentDidMount() {
-    this.props.loadOrders(this.props.userId);
+const OrderPage = (props) => {
+  useEffect(() => {
+    props.loadOrders(props.userId);
+  }, []);
 
-    // this.setState({ loading: true });
-    // axios
-    //   .get("orders.json")
-    //   .then((response) => {
-    //     this.setState({ orders: Object.entries(response.data).reverse() });
-    //   })
-    //   .catch((err) => console.log(err))
-    //   .finally(() => {
-    //     this.setState({ loading: false });
-    //   });
-  }
-
-  render() {
-    console.log(this.props.orders);
-
-    return (
-      <div>
-        {this.props.loading ? (
-          <Spinner />
-        ) : (
-          this.props.orders.map((order) => (
-            <Order key={order[0]} order={order[1]} />
-          ))
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      {props.loading ? (
+        <Spinner />
+      ) : (
+        props.orders.map((order) => <Order key={order[0]} order={order[1]} />)
+      )}
+    </div>
+  );
+};
 
 const mapStateToProps = (state) => {
   return {

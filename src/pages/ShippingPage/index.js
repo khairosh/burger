@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 
 import { connect } from "react-redux";
 
@@ -10,60 +10,41 @@ import Contact from "../../components/Contact";
 
 import css from "./style.module.css";
 
-class ShippingPage extends Component {
-  state = {
-    ingredients: null,
-    totalPrice: 0,
+const ShippingPage = (props) => {
+  const cancelOrder = () => {
+    props.history.goBack();
   };
 
-  // render-н өмнө ажиллана
-  componentWillMount() {}
-
-  // render()-н дараа ажиллана
-  componentDidMount() {
-    console.log("DidMount() : After render");
-  }
-
-  goBack = () => {
-    this.props.history.goBack();
+  const showContactData = () => {
+    props.history.replace("/ship/contact");
   };
 
-  showContactData = () => {
-    this.props.history.replace("/ship/contact");
-  };
+  return (
+    <div className={css.ShippingPage}>
+      <p style={{ fontSize: "20px" }}>
+        <strong>Таны захиалга амттай байх болно гэж найдаж байна</strong>
+      </p>
+      <p style={{ fontSize: "20px" }}>
+        Дүн: <strong>{props.totalPrice}₮</strong>
+      </p>
+      <Burger />
+      <Button text="ЗАХИАЛГЫГ ЦУЦЛАХ" clicked={cancelOrder} btnType="Danger" />
+      <Button
+        text="ХҮРГЭЛТИЙН МЭДЭЭЛЭЛ ОРУУЛАХ"
+        clicked={showContactData}
+        btnType="Success"
+      />
 
-  render() {
-    return (
-      <div className={css.ShippingPage}>
-        <p style={{ fontSize: "20px" }}>
-          <strong>Таны захиалга амттай байх болно гэж найдаж байна</strong>
-        </p>
-        <p style={{ fontSize: "20px" }}>
-          Дүн: <strong>{this.props.totalPrice}₮</strong>
-        </p>
-        <Burger />
-        <Button
-          text="ЗАХИАЛГЫГ ЦУЦЛАХ"
-          clicked={this.goBack}
-          btnType="Danger"
-        />
-        <Button
-          text="ХҮРГЭЛТИЙН МЭДЭЭЛЭЛ ОРУУЛАХ"
-          clicked={this.showContactData}
-          btnType="Success"
-        />
-
-        <Route path="/ship/contact" render={() => <Contact />} />
-        {/* <Route path="/ship/contact">
+      <Route path="/ship/contact" render={() => <Contact />} />
+      {/* <Route path="/ship/contact">
           <Contact
             ingredients={this.state.ingredients}
             totalPrice={this.state.totalPrice}
           />
         </Route> */}
-      </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 const mapStateToProps = (state) => {
   return {

@@ -63,7 +63,7 @@ const reducer = (state = initialState, action) => {
           finished: false,
         },
       };
-    case "RESET_ORDER":
+    case "CLEAR_ORDER":
       return {
         ...state,
         newOrder: {
