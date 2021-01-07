@@ -2,8 +2,6 @@ import React from "react";
 
 import { connect } from "react-redux";
 
-import * as actions from "../../redux/actions/burgerActions";
-
 import css from "./style.module.css";
 
 import BuildControl from "../BuildControl";
@@ -24,8 +22,6 @@ const BuildControls = (props) => {
       {Object.keys(props.ingredientNames).map((key) => (
         <BuildControl
           disabled={disabledIngredients}
-          increaseIngredient={props.increaseIngredient}
-          decreaseIngredient={props.decreaseIngredient}
           key={key}
           type={key}
           text={props.ingredientNames[key]}
@@ -53,11 +49,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    increaseIngredient: (ortsNer) => dispatch(actions.addIngredient(ortsNer)),
-    decreaseIngredient: (ortsNer) =>
-      dispatch(actions.removeIngredient(ortsNer)),
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(BuildControls);
+export default connect(mapStateToProps)(BuildControls);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import { connect } from "react-redux";
 
@@ -15,6 +15,8 @@ const Contact = (props) => {
   const [custName, setCustName] = useState(null);
   const [city, setCity] = useState(null);
   const [street, setStreet] = useState(null);
+
+  const titleRef = useRef();
 
   // useEffect(() => {
   //   return () => {
@@ -35,6 +37,11 @@ const Contact = (props) => {
   // }
 
   const changedName = (e) => {
+    // Өнгө анивчих
+    if (titleRef.current.style.color === "red")
+      titleRef.current.style.color = "green";
+    else titleRef.current.style.color = "red";
+
     setCustName(e.target.value);
   };
 
@@ -80,6 +87,9 @@ const Contact = (props) => {
             props.newOrderStatus.error}
       </div>
       <div className={css.Contact}>
+        <div ref={titleRef}>
+          <h3>Үнэн зөв оруулна уу</h3>
+        </div>
         <input
           onChange={changedName}
           type="text"

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
@@ -16,17 +16,11 @@ const SignupPage = (props) => {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [error, setError] = useState("");
 
-  const changeEmail = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const changePassword = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const changePasswordConfirm = (e) => {
-    setPasswordConfirm(e.target.value);
-  };
+  // Талбарын утга өөрчлөгдөхөд validation хийхэд useEffect ашиглаж болно
+  useEffect(() => {
+    console.log("Email changing...");
+    // setPassword(email);
+  }, [email]);
 
   const signup = () => {
     if (password !== passwordConfirm) {
@@ -42,10 +36,18 @@ const SignupPage = (props) => {
     <div className={css.Signup}>
       {props.userId && <Redirect to="/orders" />}
       <h3>Мэдээллээ оруулна уу</h3>
-      <input onChange={changeEmail} type="text" placeholder="Имэйл хаяг" />
-      <input onChange={changePassword} type="password" placeholder="Нууц үг" />
       <input
-        onChange={changePasswordConfirm}
+        onChange={(e) => setEmail(e.target.value)}
+        type="text"
+        placeholder="Имэйл хаяг"
+      />
+      <input
+        onChange={(e) => setPassword(e.target.value)}
+        type="password"
+        placeholder="Нууц үг"
+      />
+      <input
+        onChange={(e) => setPasswordConfirm(e.target.value)}
         type="password"
         placeholder="Нууц үгээ давтана уу"
       />
